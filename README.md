@@ -1,44 +1,40 @@
 # Amazon Product Intelligence Scraper
 
-A premium, monochromatic light-themed web dashboard that upgrades Amazon mobile scraping into a fully generic, real-world product intelligence tool. Users can scrape listing search results dynamically, inspect individual products to extract technical specification sheets, view visual price and review analytics, and export scraped datasets.
+A premium, monochromatic light-themed web dashboard that upgrades standard product searching and single product specifications scraping into a comprehensive product intelligence tool. The application allows users to search keywords dynamically, inspect detailed product specifications, and export the scraped datasets.
 
 ---
 
-## What We Have Done (Upgrades & Features)
+## Key Features & Implementations
 
-1. **Jupyter Notebook to Web App Migration**:
-   - Migrated the raw BeautifulSoup notebook code into a structured, production-ready Python application.
-   - Built a lightweight, concurrent local web server using **Flask**.
+1. **Web Dashboard Interface**:
+   - Built on a lightweight, concurrent **Flask** backend.
+   - Styled with a modern, high-contrast black-and-white minimalist design.
+   - Features a sidebar-based layout, a responsive 11-column data table, and interactive progress logs.
 
 2. **Generic Keyword Scraper**:
-   - Upgraded the scraper to search for **any** product keyword (e.g., *laptops*, *keyboards*, *headphones*), moving away from hardcoded mobile search configurations.
-   - Supports selecting from multiple Amazon regional storefronts: India (`amazon.in`), United States (`amazon.com`), United Kingdom (`amazon.co.uk`), Germany (`amazon.de`), and Canada (`amazon.ca`).
-   - Supports multi-page scrapers with dynamic progress indicators.
+   - Supports search queries for any product keyword.
+   - Allows selection from multiple Amazon regional storefronts: India (`amazon.in`), United States (`amazon.com`), United Kingdom (`amazon.co.uk`), Germany (`amazon.de`), and Canada (`amazon.ca`).
+   - Supports scraping multiple result pages with dynamic progress estimation.
 
-3. **Advanced Anti-Blocking Security Features**:
-   - Integrated matched **Browser Profiles** combining matched user-agents and client-hint indicators (like `sec-ch-ua` and `sec-ch-ua-platform`) to prevent bot detection flags.
-   - Integrated `requests.Session` cookie persistence with domain warm-ups.
-   - Designed optional **Proxy Routing Integration** (compatible with ScraperAPI) to bypass Amazon's IP blocks and HTTP 503 errors when hosted live.
+3. **Product Detail Inspector**:
+   - Parses specific product pages via ASIN or direct URL inputs.
+   - Extracts Brand name, Bullet point features, Product image, and complete technical specifications tables (such as RAM, Storage, Manufacturer details, Weight, Dimensions).
 
-4. **Product Details & Spec Sheet Inspector**:
-   - Paste any product URL or ASIN.
-   - Extracts Brand name, Product Description Bullet points, High-Res Image, and a full mapping of the technical specification tables (e.g. RAM, Weight, Operating System, Manufacturer details).
+4. **Multi-Format Data Exporter**:
+   - Supports downloading scraped datasets in **CSV**, **Excel (XLSX)**, or **JSON** formats.
 
-5. **Monochromatic Light Web Interface**:
-   - Designed a modern, minimalist white-and-black dashboard with left-sidebar navigation and multi-column grid panes.
-   - Outputs a clean, 11-column data table that keeps data points (Image, ASIN, Title, Price, Rating, Reviews, Availability, Shipping, and Dates) isolated in separate cells.
-   - Interactive collapsable operation progress logging screen.
-
-6. **Multi-Format Data Exporter**:
-   - Direct download of scraped datasets as **CSV**, **Excel (XLSX)**, or **JSON** files.
+5. **Anti-Blocking Adaptations**:
+   - Implements aligned **Browser Profiles** matching user-agents and client-hints (such as `sec-ch-ua` and `sec-ch-ua-platform`) to minimize bot detection triggers.
+   - Features `requests.Session` cookie persistence with initial domain warm-ups.
+   - Includes optional **Proxy Routing Integration** (via ScraperAPI or custom HTTP proxies) to bypass datacenter IP blocks and 503 errors in production.
 
 ---
 
-## How to Set Up and Run Locally
+## Local Setup Instructions
 
 1. **Clone the Repository**:
    ```bash
-   git clone <your-repository-url>
+   git clone <repository-url>
    cd Amazon-Mobile-Product-Scraper
    ```
 
@@ -65,24 +61,21 @@ A premium, monochromatic light-themed web dashboard that upgrades Amazon mobile 
    ```
 
 5. **Open Dashboard**:
-   Go to [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
+   Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in the browser.
 
 ---
 
-## Preparing for GitHub Upload
+## Deployment Configuration
 
-The repository is pre-configured with a [`.gitignore`](.gitignore) file. When you push this project to GitHub, Git will automatically ignore:
-- The local virtual environment (`venv/` folder).
-- Pycache and compiler metadata.
-- Local spreadsheet datasets or test outputs (`*.csv`, `*.xlsx`, `*.json`).
+The repository contains a pre-configured [`.gitignore`](.gitignore) file to exclude local environment folders (`venv/`), pycache directories, and local scrape spreadsheets (`*.csv`, `*.xlsx`, `*.json`) from commits.
 
-Simply run the following Git commands in your terminal to push your repository:
+To push the project to a GitHub repository:
 ```bash
 git init
 git add .
-git commit -m "feat: upgrade Amazon Scraper with premium light UI, generic scraping, and proxy support"
+git commit -m "feat: complete scraper web app with monochromatic light UI"
 git branch -M main
-git remote add origin <your-github-repo-url>
+git remote add origin <github-repo-url>
 git push -u origin main
 ```
 
