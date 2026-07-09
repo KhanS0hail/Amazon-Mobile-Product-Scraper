@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+.env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Scraped Data Outputs (keep them local)
+*.csv
+*.xlsx
+*.json
+!requirements.txt
+
+# OS Files
+.DS_Store
+Thumbtack.db
+ehthumbs.db
+
+# IDE configuration files
+.idea/
+.vscode/
+*.swp
+*.swo

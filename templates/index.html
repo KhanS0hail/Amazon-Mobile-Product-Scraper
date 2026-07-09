@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrapeIntel — Amazon Product Scraper</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Minimalist Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>Scrape<span>Intel</span></h2>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="search-tab">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Search Listings</span>
+                </button>
+                <button class="nav-btn" data-tab="product-tab">
+                    <i class="fa-solid fa-cube"></i>
+                    <span>Inspect Product</span>
+                </button>
+
+            </nav>
+
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-title">
+                    <h1 id="page-title">Search Listings</h1>
+                    <p id="page-subtitle">Extract search results, analyze product listings, and export custom datasets.
+                    </p>
+                </div>
+            </header>
+
+            <!-- Content Screens -->
+            <section class="content-body">
+
+                <!-- Tab 1: Keyword Search Scraper -->
+                <div class="tab-pane active" id="search-tab">
+                    <div class="grid-layout">
+                        <!-- Search Config Card -->
+                        <div class="card card-search-config">
+                            <div class="card-header">
+                                <i class="fa-solid fa-sliders header-icon"></i>
+                                <h3>Configuration</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="search-scraper-form">
+                                    <div class="form-group">
+                                        <label for="search-keyword">Search Keyword</label>
+                                        <input type="text" id="search-keyword" placeholder="e.g., wireless headphones"
+                                            required>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-6">
+                                            <label for="amazon-domain">Region</label>
+                                            <select id="amazon-domain">
+                                                <option value="amazon.in" selected>India (.in)</option>
+                                                <option value="amazon.com">United States (.com)</option>
+                                                <option value="amazon.co.uk">United Kingdom (.co.uk)</option>
+                                                <option value="amazon.de">Germany (.de)</option>
+                                                <option value="amazon.ca">Canada (.ca)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="scrape-pages">Pages to Scrape</label>
+                                            <select id="scrape-pages">
+                                                <option value="1" selected>1 Page</option>
+                                                <option value="2">2 Pages</option>
+                                                <option value="3">3 Pages</option>
+                                                <option value="5">5 Pages</option>
+                                                <option value="10">10 Pages</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-full-width" id="btn-start-scrape">
+                                        <i class="fa-solid fa-play"></i> Start Scrape
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Scraper Real-Time Console -->
+                        <div class="card card-console">
+                            <div class="card-header">
+                                <i class="fa-solid fa-terminal header-icon"></i>
+                                <h3>Live Progress Logs</h3>
+                                <span class="console-badge" id="console-progress">0%</span>
+                            </div>
+                            <div class="card-body console-body">
+                                <div class="console-log" id="console-log-output">
+                                    <div class="log-line">Ready to scrape. Enter a keyword above and click Start Scrape.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scraped Data Table Card -->
+                        <div class="card col-span-2">
+                            <div class="card-header table-header-flex">
+                                <div class="header-left">
+                                    <i class="fa-solid fa-table-list header-icon"></i>
+                                    <h3>Scraped Products</h3>
+                                    <span class="count-badge" id="results-count">0 items</span>
+                                </div>
+                                <div class="header-right" id="table-export-actions" style="display: none;">
+                                    <div class="export-actions">
+                                        <button class="export-btn" onclick="exportDataset('csv')"><i
+                                                class="fa-solid fa-file-csv"></i> CSV</button>
+                                        <button class="export-btn" onclick="exportDataset('excel')"><i
+                                                class="fa-solid fa-file-excel"></i> Excel</button>
+                                        <button class="export-btn" onclick="exportDataset('json')"><i
+                                                class="fa-solid fa-file-code"></i> JSON</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body results-table-wrapper">
+                                <div class="table-responsive">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="60">Image</th>
+                                                <th width="110">ASIN</th>
+                                                <th>Product Title</th>
+                                                <th width="100">Price</th>
+                                                <th width="80">Rating</th>
+                                                <th width="90">Reviews</th>
+                                                <th width="125">Availability</th>
+                                                <th width="115">Delivery Type</th>
+                                                <th width="120">Free Delivery</th>
+                                                <th width="120">Fastest Delivery</th>
+                                                <th width="65">Link</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scraped-products-tbody">
+                                            <tr>
+                                                <td colspan="11" class="empty-table-cell">
+                                                    No products loaded yet. Run a search.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Inspect Product -->
+                <div class="tab-pane" id="product-tab">
+                    <div class="grid-layout">
+                        <!-- Input Card -->
+                        <div class="card col-span-2">
+                            <div class="card-header">
+                                <i class="fa-solid fa-link header-icon"></i>
+                                <h3>Product Details Extraction</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="single-product-form">
+                                    <div class="form-row flex-row-align">
+                                        <div class="form-group flex-grow">
+                                            <label for="product-url-asin">Amazon Product Link or ASIN</label>
+                                            <input type="text" id="product-url-asin"
+                                                placeholder="Paste Amazon product link or raw ASIN" required>
+                                        </div>
+                                        <div class="form-group width-domain-select">
+                                            <label for="product-domain">Region</label>
+                                            <select id="product-domain">
+                                                <option value="amazon.in" selected>India (.in)</option>
+                                                <option value="amazon.com">US (.com)</option>
+                                                <option value="amazon.co.uk">UK (.co.uk)</option>
+                                                <option value="amazon.de">Germany (.de)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group button-group-align">
+                                            <button type="submit" class="btn btn-primary" id="btn-analyze-product">
+                                                Analyze Product
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Result Area (Hidden initially) -->
+                        <div class="col-span-2 single-product-results" id="single-product-result-area"
+                            style="display: none;">
+                            <div class="detail-grid">
+                                <!-- Image & Main Info Card -->
+                                <div class="card col-span-2">
+                                    <div class="card-body product-hero-layout">
+                                        <div class="product-image-container">
+                                            <img id="detail-product-image" src="" alt="Product Image">
+                                        </div>
+                                        <div class="product-info-details">
+                                            <span class="brand-tag" id="detail-product-brand">BRAND</span>
+                                            <h2 class="product-title-large" id="detail-product-title">Product Title</h2>
+
+                                            <div class="meta-metrics">
+                                                <div class="metric-badge">
+                                                    <span class="label">Price</span>
+                                                    <span class="value" id="detail-product-price">-</span>
+                                                </div>
+                                                <div class="metric-badge">
+                                                    <span class="label">Rating</span>
+                                                    <span class="value" id="detail-product-rating">-</span>
+                                                </div>
+                                                <div class="metric-badge">
+                                                    <span class="label">Reviews</span>
+                                                    <span class="value" id="detail-product-reviews">-</span>
+                                                </div>
+                                                <div class="metric-badge">
+                                                    <span class="label">Status</span>
+                                                    <span class="value" id="detail-product-availability">-</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="link-action">
+                                                <a href="" id="detail-product-link" target="_blank"
+                                                    class="btn btn-secondary">
+                                                    View on Amazon <i class="fa-solid fa-external-link"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Features Card -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fa-solid fa-list-check header-icon"></i>
+                                        <h3>About This Item</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="bullet-list-custom" id="detail-product-bullets">
+                                            <!-- Dynamic -->
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Specifications Card -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fa-solid fa-gears header-icon"></i>
+                                        <h3>Specifications</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="specs-grid" id="detail-product-specs">
+                                            <!-- Dynamic -->
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Product Empty State -->
+                        <div class="card col-span-2" id="product-analyzer-placeholder">
+                            <div class="card-body empty-state-big">
+                                <i class="fa-solid fa-cube"></i>
+                                <h3>Product Intel Analyzer</h3>
+                                <p>Provide an Amazon URL or ASIN above to inspect spec details, descriptions, ratings
+                                    and image assets.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-notification" id="toast">
+        <span id="toast-message">Notification message here</span>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>
