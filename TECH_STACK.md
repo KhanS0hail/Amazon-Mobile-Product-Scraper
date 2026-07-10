@@ -1,51 +1,29 @@
-# Technical Architecture & Implementation Methods
+# Technical Stack & Architecture
 
-This document details the software architecture, technical stack, and data extraction methods utilized in the Amazon Product Intelligence Scraper.
-
----
-
-## 1. Technical Stack
-
-### Backend (Python Server Layer)
-- **Framework**: `Flask` (v3.0.x) — Employed for its lightweight footprint and native support for server-side response generators, enabling log streaming.
-- **Data Structure**: `pandas` (v2.x) — Utilized for in-memory tabulation of product items, data sanitization, and structured file conversions.
-- **Excel Generation**: `openpyxl` — Middleware utilized to compile pandas DataFrames into binary Excel (`.xlsx`) files.
-- **Production Web Server**: `gunicorn` — WSGI server configured to host the Flask application in cloud production environments.
-
-### Frontend (User Interface Layer)
-- **Structure**: Semantic `HTML5` elements.
-- **Styles**: Custom Vanilla `CSS3` implementing a high-contrast monochromatic light-mode design. Key styling features include:
-  - Responsive media query overrides for mobile, tablet, and desktop viewports.
-  - Custom fluid scrollbars.
-  - Monochromatic layout theme configurations.
-- **Logic**: Vanilla `JavaScript` (ES6) controlling SPA tab switches, form handlers, asynchronous Fetch API calls, and Server-Sent Events logging listeners.
-- **Iconography**: `FontAwesome` (via CDN) for icons.
+A brief summary of the technologies and data extraction methods used in the Amazon Product Intelligence Scraper.
 
 ---
 
-## 2. Scraping Methods & Anti-Blocking Adaptations
+## 1. Core Stack
 
-Amazon utilizes automated request filters (e.g. CAPTCHAs, HTTP 503 limits) to block scrapers. The application implements several custom defenses:
+### Backend
+- **Python / Flask**: Runs the server, routing search queries, product analysis, logs, and downloads.
+- **Gunicorn**: Web server mapping configuration used for cloud host environments.
+- **Pandas & OpenPyXL**: Manages in-memory data structures and exports CSV, Excel, and JSON files.
 
-### A. Persistent Sessions & Domain Warming
-Rather than firing one-off raw HTTP calls, the scraper instantiates a `requests.Session()`.
-1. The session is initialized with a specific browser profile.
-2. The session fires a warming request to the base homepage domain (`amazon.com` or `amazon.in`).
-3. This fetches initial validation cookies and tokens from Amazon, which are carried over to subsequent search and product requests, matching normal browser cookie streams.
-
-### B. Aligned Browser Profiles (Client Hints)
-Standard scraping libraries often rotate user-agent strings but send mismatched client browser parameters. This scraper maps matching **User-Agents** and **Client Hints** (`sec-ch-ua` and `sec-ch-ua-platform` headers) so that they align exactly (e.g. macOS user-agent strings match macOS client hints).
-
-### C. Proxy Routing (ScraperAPI Integration)
-For cloud server deployments, datacenter IPs are immediately blacklisted by Amazon.
-- The scraper features a `fetch_url()` method that checks for the presence of a `SCRAPER_API_KEY` (or generic `PROXY_URL`) environment variable.
-- If present, requests are routed through a residential proxy network, which automatically handles rotating IPs, headers, and CAPTCHA solving before returning the HTML.
+### Frontend
+- **HTML5 & CSS3**: Minimalist monochromatic styling using flex/grid structures.
+- **Vanilla JavaScript**: Controls active tabs, form submits, fetch operations, and logging outputs.
+- **FontAwesome**: UI iconography assets.
 
 ---
 
-## 3. Real-Time Streaming Logs (SSE)
+## 2. Data Scraping & Bypass Operations
+- **Session Persistence**: Utilizes `requests.Session()` with warmed-up domain cookies to match browser behavior.
+- **Header Alignment**: Pairs specific User-Agents with corresponding Client Hints to pass bot checks.
+- **Proxy Routing**: Supports routing requests through residential proxy providers (via the `SCRAPER_API_KEY` or `PROXY_URL` environment variables).
 
-To provide feedback to the user during long-running multi-page scrapes without blocking browser threads, the application uses **Server-Sent Events (SSE)**.
-- **API Endpoint**: `/api/scrape/search/stream` returns a `Response` object with `mimetype='text/event-stream'`.
-- The backend yields progress packets as they occur (`yield "data: Fetching Page 1\n\n"`).
-- On the client side, JavaScript listens using `EventSource` and streams the log text line-by-line into the **Live Progress Logs** UI drawer.
+---
+
+## 3. Real-Time Logger
+- **Server-Sent Events (SSE)**: Streams progress lines directly from Python's background scraper to the frontend progress window using a `/api/scrape/search/stream` connection.

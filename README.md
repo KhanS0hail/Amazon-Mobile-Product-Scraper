@@ -63,23 +63,9 @@ A premium, monochromatic light-themed web dashboard that upgrades standard produ
 5. **Open Dashboard**:
    Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in the browser.
 
----
-
-## Deployment Configuration
-
-The repository contains a pre-configured [`.gitignore`](.gitignore) file to exclude local environment folders (`venv/`), pycache directories, and local scrape spreadsheets (`*.csv`, `*.xlsx`, `*.json`) from commits.
-
-To push the project to a GitHub repository:
-```bash
-git init
-git add .
-git commit -m "feat: complete scraper web app with monochromatic light UI"
-git branch -M main
-git remote add origin <github-repo-url>
-git push -u origin main
-```
 
 ---
+
 
 ## Future Plans & Roadmap
 - **Interactive Visual Analytics**: Integrate dynamic Chart.js libraries to display price range bar charts for keyword listing statistics and customer review rating breakdown histograms (5-Star to 1-Star star frequency) for single product details pages.
