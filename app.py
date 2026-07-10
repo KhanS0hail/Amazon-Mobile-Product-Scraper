@@ -55,19 +55,6 @@ def search_stream():
             # We prefix lines with a specific header if needed
             yield f"data: {msg}\n\n"
         
-        # We need a custom implementation to get yields from inside the scraper.
-        # So we adapt the scraper call to yield log items.
-        # To do this inside a Flask generator, we can pass a function that captures the yields,
-        # but since we want the yield to go out immediately, we can run a modified scrape.
-        # Or, we can run the scraper and feed back.
-        # Let's wrap the log_cb to act as a yield statement. Since we can't yield directly from
-        # the nested function call to the outer generator without special handlers, we can
-        # do it by yielding text inside the callback. Wait, in Python, generators yield up.
-        # A simpler way is to have the scraper return a generator of logs and data!
-        # Let's see: we can rewrite the scraper to yield progress messages and then yield the final data,
-        # OR we can execute step by step in app.py.
-        # Let's do a step-by-step loop in app.py using the scraper's parsing methods,
-        # which makes the generator logic in app.py simple and elegant!
         
         import requests
         from bs4 import BeautifulSoup
