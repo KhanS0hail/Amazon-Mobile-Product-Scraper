@@ -1,6 +1,6 @@
-# Amazon Product Intelligence Scraper
+# Amazon Product Scraper
 
-A premium, monochromatic light-themed web dashboard that upgrades standard product searching and single product specifications scraping into a comprehensive product intelligence tool. The application allows users to search keywords dynamically, inspect detailed product specifications, and export the scraped datasets.
+A premium, monochromatic light-themed web dashboard that upgrades standard product searching and single product specifications scraping into a comprehensive product scraping tool. The application allows users to search keywords dynamically, inspect detailed product specifications, and export the scraped datasets.
 
 ---
 

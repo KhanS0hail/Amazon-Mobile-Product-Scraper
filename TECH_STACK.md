@@ -1,6 +1,6 @@
 # Technical Stack & Architecture
 
-A brief summary of the technologies and data extraction methods used in the Amazon Product Intelligence Scraper.
+A brief summary of the technologies and data extraction methods used in the Amazon Product Scraper.
 
 ---
 
